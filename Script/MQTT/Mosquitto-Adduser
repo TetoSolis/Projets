@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Demander le nom d'utilisateur
+read -p "Nom d'utilisateur : " username
+
+# Demander le mot de passe
+read -sp "Mot de passe : " password
+echo
+
+# Créer le hash du mot de passe
+password_hash=$(echo -n "$password" | mosquitto_passwd -p -s)
+
+# Ajouter l'utilisateur et le mot de passe au fichier d'authentification
+echo "$username:$password_hash" | sudo tee -a /etc/mosquitto/auth.txt
+
+echo "Utilisateur ajouté avec succès."
