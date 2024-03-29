@@ -7,8 +7,8 @@ read -p "Nom d'utilisateur : " username
 read -sp "Mot de passe : " password
 echo
 
-# Créer le hash du mot de passe
-password_hash=$(echo -n "$password" | mosquitto_passwd -p -s)
+# Générer le hash du mot de passe
+password_hash=$(echo -n "$password" | mosquitto_passwd -p -stdin)
 
 # Ajouter l'utilisateur et le mot de passe au fichier d'authentification
 echo "$username:$password_hash" | sudo tee -a /etc/mosquitto/auth.txt
