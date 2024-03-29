@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Assurez-vous que vous avez déjà configuré BIND9 sur votre système en utilisant le script précédent.
+
+# Demander à l'utilisateur le nom de domaine à ajouter
+read -p "Entrez le nom de domaine que vous souhaitez ajouter : " domain_name
+
+# Demander à l'utilisateur l'adresse IP associée à ce nom de domaine
+read -p "Entrez l'adresse IP associée à $domain_name : " ip_address
+
+# Ajouter une entrée de zone dans le fichier de configuration BIND9
+echo -e "$domain_name\tIN\tA\t$ip_address" | sudo tee -a /etc/bind/db.local
+
+# Redémarrer le service BIND9 pour appliquer les modifications
+sudo systemctl restart bind9
+
+echo "Le nom de domaine $domain_name avec l'adresse IP $ip_address a été ajouté au serveur DNS."
