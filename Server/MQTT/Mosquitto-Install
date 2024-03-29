@@ -28,21 +28,19 @@ sudo chmod 0600 /etc/mosquitto/auth.txt
 
 # Créer un fichier de configuration personnalisé pour Mosquitto
 sudo tee /etc/mosquitto/conf.d/default.conf > /dev/null <<EOF
-# Configuration personnalisée pour Mosquitto
+# Configuration pour Mosquitto avec SSL/TLS et authentification
 
-# Port
+# Port pour les connexions SSL/TLS
 listener 8883
+certfile /etc/mosquitto/certs/mosquitto.crt
+keyfile /etc/mosquitto/certs/mosquitto.key
+cafile /path/to/cafile.pem
+tls_version tlsv1.2
+tls_ciphers HIGH:!aNULL:!MD5
 
 # Authentification
 allow_anonymous false
 password_file /etc/mosquitto/auth.txt
-
-# TLS
-tls_version tlsv1.2
-tls_certfile /etc/mosquitto/certs/mosquitto.crt
-tls_keyfile /etc/mosquitto/certs/mosquitto.key
-tls_cafile /etc/mosquitto/certs/ca.pem
-tls_ciphers HIGH:!aNULL:!MD5
 EOF
 
 # Démarrer le service Mosquitto
