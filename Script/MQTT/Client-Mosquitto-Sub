@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Demander à l'utilisateur les informations de connexion
+read -p "Adresse du broker MQTT : " broker_address
+read -p "Port : " port
+read -p "Nom d'utilisateur (laissez vide si non utilisé) : " username
+read -sp "Mot de passe (laissez vide si non utilisé) : " password
+echo
+
+# Demander le sujet à écouter
+read -p "Sujet à écouter : " topic
+
+# Utiliser les informations pour souscrire et écouter les messages
+mosquitto_sub -h "$broker_address" -p "$port" -t "$topic" -u "$username" -P "$password"
