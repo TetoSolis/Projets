@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# Installation de Mosquitto
+sudo apt update
+sudo apt install -y mosquitto mosquitto-clients
+
+# Demander les informations pour le certificat
+read -p "Pays (ex: FR) : " country
+read -p "Province ou État : " state
+read -p "Ville : " city
+read -p "Organisation : " organization
+read -p "Nom commun (généralement le nom de domaine) : " common_name
+read -p "Adresse e-mail : " email
+
+# Génération d'un certificat auto-signé pour le serveur MQTT
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 \
+    -subj "/C=$country/ST=$state/L=$city/O=$organization/CN=$common_name/emailAddress=$email" \
+    -keyout mosquitto.key -out mosquitto.crt
+
+# Déplacer les certificats dans le répertoire approprié
+sudo mv mosquitto.crt /etc/mosquitto/certs/
+sudo mv mosquitto.key /etc/mosquitto/certs/
+
+# Créer un fichier de configuration pour l'authentification
+sudo touch /etc/mosquitto/auth.txt
+sudo chown mosquitto /etc/mosquitto/auth.txt
+sudo chmod 0600 /etc/mosquitto/auth.txt
+
+# Créer un fichier de configuration personnalisé pour Mosquitto
+sudo tee /etc/mosquitto/conf.d/default.conf > /dev/null <<EOF
+# Configuration personnalisée pour Mosquitto
+
+# Port
+listener 8883
+
+# Authentification
+allow_anonymous false
+password_file /etc/mosquitto/auth.txt
+
+# TLS
+tls_version tlsv1.2
+tls_certfile /etc/mosquitto/certs/mosquitto.crt
+tls_keyfile /etc/mosquitto/certs/mosquitto.key
+tls_cafile /etc/mosquitto/certs/ca.pem
+tls_ciphers HIGH:!aNULL:!MD5
+EOF
+
+# Démarrer le service Mosquitto
+sudo systemctl start mosquitto
+
+echo "Configuration de Mosquitto terminée."
