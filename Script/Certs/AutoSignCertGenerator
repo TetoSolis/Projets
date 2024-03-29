@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Demander à l'utilisateur le nom du certificat
+read -p "Entrez le nom du certificat : " cert_name
+
+# Vérifier si le nom de fichier .key existe déjà
+if [ -f "$cert_name.key" ]; then
+    echo "La clé privée existe déjà pour ce certificat."
+    read -p "Voulez-vous la remplacer ? (oui/non) : " replace_key
+    if [ "$replace_key" != "oui" ]; then
+        echo "Arrêt du script."
+        exit 1
+    fi
+fi
+
+# Demander les informations pour le certificat
+read -p "Pays (ex: FR) : " country
+read -p "Province ou État : " state
+read -p "Ville : " city
+read -p "Organisation : " organization
+read -p "Nom commun (généralement le nom de domaine) : " common_name
+read -p "Adresse e-mail : " email
+
+# Générer une clé privée
+openssl genrsa -out "$cert_name.key" 2048
+
+# Créer un fichier de configuration temporaire pour OpenSSL
+cat > openssl.conf <<EOF
+[req]
+default_bits = 2048
+prompt = no
+default_md = sha256
+distinguished_name = dn
+
+[ dn ]
+C=$country
+ST=$state
+L=$city
+O=$organization
+CN=$common_name
+emailAddress=$email
+EOF
+
+# Générer une demande de signature de certificat (CSR)
+openssl req -new -key "$cert_name.key" -out "$cert_name.csr" -config openssl.conf
+
+# Générer un certificat auto-signé à partir de la clé privée et de la demande de signature de certificat
+openssl x509 -req -days 365 -in "$cert_name.csr" -signkey "$cert_name.key" -out "$cert_name.crt"
+
+# Supprimer le fichier de configuration temporaire
+rm openssl.conf
+
+echo "Certificat auto-signé généré : $cert_name.crt"
