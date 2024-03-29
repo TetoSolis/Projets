@@ -23,8 +23,8 @@ sudo mv mosquitto.key /etc/mosquitto/certs/
 
 # Créer un fichier de configuration pour l'authentification
 sudo touch /etc/mosquitto/auth.txt
-sudo chown mosquitto /etc/mosquitto/auth.txt
-sudo chmod 0600 /etc/mosquitto/auth.txt
+sudo chmod 644 /etc/mosquitto/auth.txt
+sudo chown mosquitto:mosquitto /etc/mosquitto/auth.txt
 
 # Créer un fichier de configuration personnalisé pour Mosquitto
 sudo tee /etc/mosquitto/conf.d/default.conf > /dev/null <<EOF
