@@ -36,7 +36,6 @@ certfile /etc/mosquitto/certs/mosquitto.crt
 keyfile /etc/mosquitto/certs/mosquitto.key
 cafile /path/to/cafile.pem
 tls_version tlsv1.2
-tls_ciphers HIGH:!aNULL:!MD5
 
 # Authentification
 allow_anonymous false
