@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Demander les informations pour le certificat de l'autorité de certification (CA)
+read -p "Pays (ex: FR) : " country
+read -p "Province ou État : " state
+read -p "Ville : " city
+read -p "Organisation : " organization
+read -p "Nom commun (généralement le nom de domaine de la CA) : " common_name
+
+# Générer une clé privée pour la CA
+openssl genrsa -out ca.key 2048
+
+# Générer un certificat auto-signé pour la CA
+openssl req -new -x509 -days 365 -key ca.key -out ca.crt \
+    -subj "/C=$country/ST=$state/L=$city/O=$organization/CN=$common_name"
+
+echo "Certificat de l'autorité de certification (CA) généré avec succès."
