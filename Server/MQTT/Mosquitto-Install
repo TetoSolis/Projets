@@ -34,7 +34,7 @@ sudo tee /etc/mosquitto/conf.d/default.conf > /dev/null <<EOF
 listener 8883
 certfile /etc/mosquitto/certs/mosquitto.crt
 keyfile /etc/mosquitto/certs/mosquitto.key
-cafile /etc/mosquitto/certs/ca.pem
+cafile /etc/mosquitto/certs/ca.crt
 tls_version tlsv1.2
 
 # Authentification
