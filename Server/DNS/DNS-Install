@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Mise à jour du système
+sudo apt update
+sudo apt upgrade -y
+
+# Installation de BIND9
+sudo apt install bind9 -y
+
+# Configuration du serveur DNS
+# Vous devrez probablement ajuster /etc/bind/named.conf.options et autres fichiers de configuration selon vos besoins.
+# Ce script ne couvre pas la configuration avancée.
+
+# Redémarrage du service BIND9 pour appliquer les modifications de configuration
+sudo systemctl restart bind9
+
+echo "Installation et configuration de BIND9 terminées."
